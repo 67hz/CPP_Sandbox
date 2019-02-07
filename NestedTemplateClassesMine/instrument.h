@@ -17,9 +17,9 @@ class instrument {
       m_values = new T[m_size];
     }
 
-    int size() {
-      return m_size;
-    }
+    // int size() {
+    //   return m_size;
+    // }
 
     ~instrument() {
       delete[] m_values;
