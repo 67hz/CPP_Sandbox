@@ -29,7 +29,7 @@ int main() {
   string hello = "Hello";
 
   for(auto c: hello) {
-    cout << c << " " << flush;
+    cout << c << "  " << flush;
   }
 
   cout << endl;
