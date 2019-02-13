@@ -70,7 +70,7 @@ Test getTest() {
 int main() {
 
   // copy initialization - when a new object has to be created
-  // Test test1 = getTest();
+  Test test1 = getTest();
   //
   // cout << test1 << endl;
 
@@ -78,6 +78,21 @@ int main() {
   vec.push_back(Test());
   vec.push_back(Test());
 
+  // Return values of functions are rValues - they are temp
+
+  // C++11 has LValue and RValue references
+
+  // can only bind to lValue
+  // unless const - const can bind to rValues
+  Test &rTest1 = test1;
+
+  // extends temp return value from function to const life
+  const Test &rTest2 = getTest();
+
+  // RValue (Test(1)) being passed into copy constructor
+  // test2 lValue, Test(1) rValue
+  // copy constructor is const
+  Test test2(Test(1));
 
   return 0;
 }

@@ -67,17 +67,45 @@ Test getTest() {
   return Test();
 }
 
+// takes lValue ref to test object
+void check(const Test &value) {
+  cout << "lValue function" << endl;
+}
+
+// takes rValue ref
+void check(Test &&value) {
+  cout << "rValue function" << endl;
+}
+
 int main() {
 
   // copy initialization - when a new object has to be created
-  // Test test1 = getTest();
+  Test test1 = getTest();
   //
   // cout << test1 << endl;
 
   vector<Test> vec;
   vec.push_back(Test());
-  vec.push_back(Test());
 
+  // Lvalue ref to lvalue
+  Test &ltest1 = test1;
+
+  // &&rtest1 is rValue ref (&&)
+  // Test &&rtest1 = test1; // binding r to l value won't work
+
+
+  // rval to rval
+  Test &&rtest1 = Test();
+
+  // rval to rval
+  Test &&rtest2 = getTest();
+
+  // lvalue version
+  check(test1);
+
+  // rvalue version
+  check(getTest());
+  check(Test());
 
   return 0;
 }

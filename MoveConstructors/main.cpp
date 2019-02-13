@@ -6,11 +6,12 @@ using namespace std;
 class Test {
   private:
     static const int SIZE=100;
-    int *_pBuffer; // common convention is to start members with '_'
+
+    // init pointer with nullptr - good practice
+    int *_pBuffer{nullptr}; // common convention is to start members with '_'
 
   public:
     Test() {
-      cout << "constructor" << endl;
       // _pBuffer = new int[SIZE];
       // _pBuffer = new int[SIZE](); // init all to 0
       _pBuffer = new int[SIZE]{}; // C++11 set all to 0, make sure to delete memory in destructor
@@ -23,7 +24,6 @@ class Test {
 
     // use default parameterless constructor to create _pBuffer
     Test(int i): Test() {
-      cout << "parameterized constructor" << endl;
       // _pBuffer = new int[SIZE]{}; // C++!1 set all to 0
 
       for (int j = 0; j < SIZE; j++) {
@@ -31,15 +31,23 @@ class Test {
       }
     }
 
+    // copy constructor
     Test(const Test &other) {
-      cout << "copy constructor" << endl;
-
       _pBuffer = new int[SIZE]{};
       memcpy(_pBuffer, other._pBuffer, SIZE*sizeof(int));
     }
 
+    // move constructor
+    // takes mutable rValue ref
+    Test(Test &&other) {
+      cout << "Move constructor" << endl;
+
+      // steal resources that rValue owns and then set to null in rValue
+      _pBuffer = other._pBuffer;
+      other._pBuffer = nullptr;
+    }
+
     Test &operator=(const Test &other)  {
-      cout << "assignment" << endl;
       _pBuffer = new int[SIZE]{};
 
       // memcpy(dest, source. # bytes to copy)
@@ -47,8 +55,16 @@ class Test {
       return *this;
     }
 
+    // move operator
+    Test &operator=(Test &&other) {
+      cout << "move assignment " << endl;
+      delete [] _pBuffer;
+      _pBuffer = other._pBuffer;
+      other._pBuffer = nullptr;
+      return *this;
+    }
+
     ~Test() {
-      cout << "destructor" << endl;
       delete [] _pBuffer;
     }
 
@@ -67,16 +83,19 @@ Test getTest() {
   return Test();
 }
 
-int main() {
 
-  // copy initialization - when a new object has to be created
-  // Test test1 = getTest();
-  //
-  // cout << test1 << endl;
+int main() {
 
   vector<Test> vec;
   vec.push_back(Test());
-  vec.push_back(Test());
+
+  // Rule of 3: if implementing an assignment operator, implement a copy constructor,
+  // and destructor
+  // now should implement move constructor and move assignment operator
+
+
+  Test test;
+  test = getTest();
 
 
   return 0;
